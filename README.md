@@ -8,7 +8,7 @@ Pour répondre aux besoins de l'entreprise "La Boite du Fromager", un entrepôt 
 
 L'entrepôt de données comprend deux principales sources de données :
 - **Données Dimensionnelles (Site Web)** : Ces données incluent des informations sur les fromages, comme la famille, la texture, le prix, etc.
-- **Données Transactionnelles ** : Ces données contiennent des détails sur les ventes, telles que la quantité vendue, le chiffre d'affaires réalisé, la date de vente, etc.
+- **Données Transactionnelles en CSV ** : Ces données contiennent des détails sur les ventes, telles que la quantité vendue, le chiffre d'affaires réalisé, la date de vente, etc.
 
 ## Fonctionnalités de l'Application Tkinter
 
