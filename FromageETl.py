@@ -1,12 +1,11 @@
-import os
-import sqlite3
-import requests
-import pandas as pd
+import sqlite3 ,os, requests, pandas as pd
 from bs4 import BeautifulSoup
 from datetime import datetime
 from urllib.request import urlopen, urlretrieve
 
 class FromageETL:
+    """_summary_
+    """
     def __init__(self, url, db_path):
         self.url = url
         self.db_path = db_path

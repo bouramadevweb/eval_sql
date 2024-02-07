@@ -20,7 +20,7 @@ CREATE TABLE  Sales (
     id VARCHAR2(50) NOT NULL,
     sale_date_id VARCHAR2(50) NOT NULL,
     FOREIGN KEY (id) REFERENCES D_cheeses(id) ON DELETE CASCADE,
-    FOREIGN KEY (sale_date_id) REFERENCES D_sale_dates(id) ON DELETE CASCADE
+    FOREIGN KEY (sale_date_id) REFERENCES sale_dates(id) ON DELETE CASCADE
 );
 
 INSERT INTO cheeses (id, fromage, family, paste, prix) 
@@ -60,6 +60,14 @@ INSERT INTO DATES (DATEID, SALE_DATE)
 SELECT DISTINCT ventes.dates AS DATEID,
 TO_DATE(ventes.dates, 'YYYY-MM-DD') AS SALE_DATE
 FROM VENTES;
+
+--insertion des cheess INSERT INTO cheeses (fromage, family, paste, prix)
+iNSERT INTO cheeses (fromage, family, paste, prix)
+SELECT DISTINCT fromage, family, paste,
+    TO_NUMBER(price DEFAULT NULL ON CONVERSION ERROR) AS prix
+FROM ODSFROMAGES
+WHERE price IS NOT NULL AND LENGTH(TRIM(price)) > 0;
+
 
 
 
