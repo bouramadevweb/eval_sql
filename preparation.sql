@@ -1,5 +1,5 @@
 --CREATTION DE TABLE CHEESES
-CREATE TABLE IF NOT EXISTS cheeses (
+CREATE TABLE  cheeses (
     id VARCHAR2(20) NOT NULL,
     fromage VARCHAR2(50) NULL,
     family VARCHAR2(50) NULL,
@@ -30,6 +30,16 @@ SELECT * FROM cheeses;
 DELETE FROM cheeses;
 TRUNCATE TABLE cheeses;
 ------------------------------
+CREATE TABLE ODSFROMAGES (
+   id VARCHAR2(50),
+   fromage VARCHAR2(50),
+   family VARCHAR2(50),
+   paste VARCHAR2(50),
+   price VARCHAR2(50),
+   "date" VARCHAR2(50),  
+   image_filename VARCHAR2(50),
+   PRIMARY KEY(id)
+);
 -- INSERTION DES DONNEES DANS LA TABLE CHEESES
 INSERT INTO cheeses (id, fromage, family, paste, prix) 
 SELECT DISTINCT 
@@ -39,3 +49,19 @@ SELECT DISTINCT
     paste, 
     price AS prix
 FROM ODSFROMAGES;
+-- creation de table temporaire vente 
+CREATE TABLE ventes (
+    cheeses VARCHAR2(50),
+    dates DATE,
+    quantites NUMBER
+);
+---- insertion des donnees dans la table ventes
+INSERT INTO DATES (DATEID, SALE_DATE) 
+SELECT DISTINCT ventes.dates AS DATEID,
+TO_DATE(ventes.dates, 'YYYY-MM-DD') AS SALE_DATE
+FROM VENTES;
+
+
+
+
+
