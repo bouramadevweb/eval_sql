@@ -41,14 +41,14 @@ CREATE TABLE ODSFROMAGES (
    PRIMARY KEY(id)
 );
 -- INSERTION DES DONNEES DANS LA TABLE CHEESES
-INSERT INTO cheeses (id, fromage, family, paste, prix) 
-SELECT DISTINCT 
-    REPLACE(TRIM(id || fromage || family || paste), ' ', '') AS id_concatenated, 
-    fromage, 
-    odsfromages.family, 
-    paste, 
-    price AS prix
-FROM ODSFROMAGES;
+-- INSERT INTO cheeses (id, fromage, family, paste, prix) 
+-- SELECT DISTINCT 
+--     REPLACE(TRIM(id || fromage || family || paste), ' ', '') AS id_concatenated, 
+--     fromage, 
+--     odsfromages.family, 
+--     paste, 
+--     price AS prix
+-- FROM ODSFROMAGES;
 -- creation de table temporaire vente 
 CREATE TABLE ventes (
     cheeses VARCHAR2(50),
@@ -62,11 +62,25 @@ TO_DATE(ventes.dates, 'YYYY-MM-DD') AS SALE_DATE
 FROM VENTES;
 
 --insertion des cheess INSERT INTO cheeses (fromage, family, paste, prix)
-SELECT DISTINCT fromage, family, paste, price
-FROM ODSFROMAGES
-WHERE TO_NUMBER(price DEFAULT NULL ON CONVERSION ERROR) IS NULL
-  AND price IS NOT NULL AND LENGTH(TRIM(price)) > 0;
+INSERT INTO cheeses (fromage, family, paste, prix)
+SELECT DISTINCT fromage, family, paste,price
+    
+FROM ODSFROMAGES ;
+-- joint la table ventes avec la table cheeses puor affriche le prix
 
+SELECT
+    v.id_ventes,
+    v.cheeses,
+    v.date_vente,
+    v.quantites,
+    c.prix,
+    TO_NUMBER(c.prix, '999.99') AS prix_number
+FROM
+    ventes v
+JOIN
+    cheeses c ON v.cheeses = c.family
+WHERE
+    REGEXP_LIKE(c.prix, '^-?\d+(\.\d+)?$');
 
 
 
