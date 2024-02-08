@@ -41,14 +41,14 @@ CREATE TABLE ODSFROMAGES (
    PRIMARY KEY(id)
 );
 -- INSERTION DES DONNEES DANS LA TABLE CHEESES
--- INSERT INTO cheeses (id, fromage, family, paste, prix) 
--- SELECT DISTINCT 
---     REPLACE(TRIM(id || fromage || family || paste), ' ', '') AS id_concatenated, 
---     fromage, 
---     odsfromages.family, 
---     paste, 
---     price AS prix
--- FROM ODSFROMAGES;
+INSERT INTO cheesess (id, fromage, family, paste, prix) 
+SELECT DISTINCT 
+    REPLACE(TRIM(id || fromage || family || paste), ' ', '') AS id_concatenated, 
+    fromage, 
+    odsfromages.family, 
+    paste, 
+    price AS prix
+FROM ODSFROMAGES;
 -- creation de table temporaire vente 
 CREATE TABLE ventes (
     cheeses VARCHAR2(50),
@@ -62,11 +62,21 @@ TO_DATE(ventes.dates, 'YYYY-MM-DD') AS SALE_DATE
 FROM VENTES;
 
 --insertion des cheess INSERT INTO cheeses (fromage, family, paste, prix)
-INSERT INTO cheeses (fromage, family, paste, prix)
-SELECT DISTINCT fromage, family, paste,price
+-- INSERT INTO cheesess (id,fromage, family, paste, prix)
+-- SELECT DISTINCT  ODSFROMAGES.FROMAGE , fromage, family, paste,price
     
-FROM ODSFROMAGES ;
+-- FROM ODSFROMAGES ;
 -- joint la table ventes avec la table cheeses puor affriche le prix
+
+--- insertion des donnees dans la table ventes
+INSERT INTO ventes (ventes_id, cheeses, vente_date, quantites)
+SELECT 
+    SYS_GUID() AS vente_id,
+    c.family AS cheesess,
+    t.vente_date,
+    t.quantites 
+FROM sales t
+JOIN cheesess c ON t.cheeses = c.family;
 
 SELECT
     v.id_ventes,
@@ -74,7 +84,7 @@ SELECT
     v.date_vente,
     v.quantites,
     c.prix,
-    TO_NUMBER(c.prix, '999.99') AS prix_number
+    TO_NUMBER(c.prix)* (v.quantites) as Montant
 FROM
     ventes v
 JOIN
@@ -82,6 +92,24 @@ JOIN
 WHERE
     REGEXP_LIKE(c.prix, '^-?\d+(\.\d+)?$');
 
+----- motant total
+SELECT
+    v.id_ventes,
+    v.cheeses,
+    v.date_vente,
+    v.quantites,
+    c.prix,
+    TO_NUMBER(REGEXP_SUBSTR(c.prix, '^-?\d+(\.\d+)?')) AS prix_number,
+    v.quantites * TO_NUMBER(REGEXP_SUBSTR(c.prix, '^-?\d+(\.\d+)?')) AS montant_total
+FROM
+    ventes v
+JOIN
+    cheeses c ON v.cheeses = c.family
+WHERE
+    REGEXP_LIKE(c.prix, '^-?\d+(\.\d+)?$');
+
+------------------------------------------------------------
+--v
 
 
 
