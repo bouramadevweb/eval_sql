@@ -128,7 +128,7 @@ WHERE
 
 ------------------------------------------------------------
 --v
---Le nombre de fromages par famille :
+Le nombre de fromages par famille :
 SELECT
     c.family,
     COUNT(c.fromage) AS nombre_de_fromages
@@ -136,9 +136,10 @@ FROM
     cheesess c
 GROUP BY
     c.family;
-----Le jour ayant réalisé le plus de chiffre d'affaires :
 
---- LES 3 FROMAGE LE PLUS VENDU
+--Le jour ayant réalisé le plus de chiffre d'affaires :
+
+ LES 3 FROMAGE LE PLUS VENDU
 SELECT
     c.fromage,
     SUM(v.quantites) AS total_quantites_vendues
@@ -166,7 +167,7 @@ FETCH FIRST 3 ROWS ONLY;
 --     total_quantites_vendues DESC
 -- FETCH FIRST 3 ROWS ONLY;
 
----Le jour ayant réalisé le plus de chiffre d'affaires :
+--Le jour ayant réalisé le plus de chiffre d'affaires :
 
 SELECT
     c.fromage,

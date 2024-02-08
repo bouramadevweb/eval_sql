@@ -1,4 +1,5 @@
-import sqlite3 ,os, requests, pandas as pd
+import sqlite3 ,os, requests, pandas as pd , oracledb ,getpass
+
 from bs4 import BeautifulSoup
 from datetime import datetime
 from urllib.request import urlopen, urlretrieve
@@ -184,6 +185,107 @@ class FromageETL:
         accuracy_rate = total_correct_results / total_results * 100
 
         print(f"Taux de fiabilité des résultats : {accuracy_rate} %")
+        #""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+        #######################################################################
+        
+    def get_family_counts(self):
+        """"""
+        """"""
+        
+
+        #conn = oracledb.connect(self.db_path)
+        conn = oracledb.connect(DWH	system@//localhost:1521/xe())
+        
+        query = '''
+            SELECT
+                c.family,
+                COUNT(c.fromage) AS nombre_de_fromages
+            FROM
+                cheese_ods c
+            GROUP BY
+                c.family
+        '''
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df.to_dict(orient='records')
+
+    def get_top_cheeses(self, limit=3):
+        """_summary_
+
+        Args:
+            limit (int, optional): _description_. Defaults to 3.
+
+        Returns:
+            _type_: _description_
+        """
+        conn = sqlite3.connect(self.db_path)
+        query = f'''
+            SELECT
+                c.fromage,
+                SUM(v.quantites) AS total_quantites_vendues
+            FROM
+                ventes v
+            JOIN
+                cheese_ods c ON v.cheeses = c.family
+            GROUP BY
+                c.fromage
+            ORDER BY
+                total_quantites_vendues DESC
+            LIMIT {limit}
+        '''
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df.to_dict(orient='records')
+
+    def get_top_day(self):
+        conn = sqlite3.connect(self.db_path)
+        query = '''
+            SELECT
+                c.fromage,
+                v.vente_date,
+                SUM(TO_NUMBER(v.quantites, '999999999.99') * TO_NUMBER(c.prix, '999999999.99')) AS chiffre_affaires_total
+            FROM
+                ventes v
+            JOIN
+                cheese_ods c ON v.cheeses = c.family
+            GROUP BY
+                c.fromage, v.vente_date
+            ORDER BY
+                chiffre_affaires_total DESC
+            LIMIT 1
+        '''
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df.to_dict(orient='records')
+    
+    def get_top_cheeses(self, limit=3):
+        """_summary_
+
+        Args:
+            limit (int, optional): _description_. Defaults to 3.
+
+        Returns:
+            _type_: _description_
+        """
+        conn = sqlite3.connect(self.db_path)
+        query = f'''
+            SELECT
+                c.fromage,
+                SUM(v.quantites) AS total_quantites_vendues
+            FROM
+                ventes v
+            JOIN
+                cheese_ods c ON v.cheeses = c.family
+            GROUP BY
+                c.fromage
+            ORDER BY
+                total_quantites_vendues DESC
+            LIMIT {limit}
+        '''
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df.to_dict(orient='records')
+    #""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
     def run_etl(self):
         """_summary_
