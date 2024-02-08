@@ -153,3 +153,34 @@ ORDER BY
 FETCH FIRST 3 ROWS ONLY;
 
 
+-- SELECT
+--     c.fromage,
+--     SUM(v.quantites) AS total_quantites_vendues
+-- FROM
+--     ventes v
+-- JOIN
+--     cheesess c ON v.cheeses = c.family
+-- GROUP BY
+--     c.fromage
+-- ORDER BY
+--     total_quantites_vendues DESC
+-- FETCH FIRST 3 ROWS ONLY;
+
+---Le jour ayant réalisé le plus de chiffre d'affaires :
+
+SELECT
+    c.fromage,
+    v.vente_date,
+    count(TO_NUMBER(v.quantites, '999999999.99') * TO_NUMBER(c.prix, '999999999.99')) AS chiffre_affaires_total
+FROM
+    ventes v
+JOIN
+    cheesess c ON v.cheeses = c.family
+GROUP BY
+    c.fromage, v.vente_date
+ORDER BY
+    chiffre_affaires_total DESC
+FETCH FIRST 1 ROW ONLY;
+
+
+
